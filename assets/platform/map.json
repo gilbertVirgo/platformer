@@ -1,0 +1,24 @@
+{
+	"width": 200,
+	"height": 200,
+	"textures": [
+		{
+			"name": "caution",
+			"fixed": true,
+			"tile": true,
+			"frames": [[0, 0]]
+		},
+		{
+			"name": "grass",
+			"fixed": true,
+			"tile": true,
+			"frames": [[200, 0]]
+		},
+		{
+			"name": "stone",
+			"fixed": true,
+			"tile": true,
+			"frames": [[400, 0]]
+		}
+	]
+}

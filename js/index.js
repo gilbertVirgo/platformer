@@ -1,22 +1,26 @@
 import Renderer from "./renderer/index.js";
 import Client from "./client/index.js";
-import { Socket } from "./handlers/index.js";
+import { Socket } from "./handler/index.js";
 
 const init = async () => {
-	const renderer = new Renderer({
-		width: 640,
-		height: 480
-	});
-	renderer.init();
-
 	const socket = new Socket("ws://192.168.1.113:1234/");
 
-	socket.on("render", renderer.paint);
 	socket.on("error", console.error);
+	socket.on("join", ({ entities }) => {
+		const renderer = new Renderer({
+			width: 640,
+			height: 480,
+			fixedEntities: entities
+		});
+
+		renderer.init();
+
+		socket.on("render", renderer.paint);
+	});
 
 	await socket.init();
 
-	const client = new Client("gilbert");
+	const client = new Client(Math.floor(Math.random() * 100000));
 	client.init(socket);
 };
 

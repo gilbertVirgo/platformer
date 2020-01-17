@@ -1,5 +1,5 @@
-import { Controls } from "../interfaces/index.js";
-import { KeyPress } from "../handlers/index.js";
+import { Controls } from "../interface/index.js";
+import { KeyPress } from "../handler/index.js";
 
 export function Client(id) {
 	this.id = id;

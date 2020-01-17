@@ -33,7 +33,7 @@ export function Controls({ keyMap = Defaults }) {
 		let dirty = false;
 
 		Object.keys(this.keyMap).forEach(key => {
-			if (this.keyMap[key] === code) {
+			if (this.keyMap[key] === code && this.profile[key] !== state) {
 				this.setProfile({ [key]: state });
 				dirty = true;
 			}
