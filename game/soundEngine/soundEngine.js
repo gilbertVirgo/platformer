@@ -1,4 +1,4 @@
-import sounds from "./sounds.js";
+import sounds from "./sounds.js.js";
 
 export function SoundEngine() {
 	this.sounds = [];
@@ -20,11 +20,16 @@ export function SoundEngine() {
 		inst.play();
 	};
 	this.init = async () => {
-		for (const { name, file } of sounds) {
-			const inst = new Audio(`../assets/sounds/${file}`);
-			await new Promise(res => inst.addEventListener("loadeddata", res));
-			this.sounds.push[{ name, inst }];
-		}
-		return this;
+		return new Promise(async onFinish => {
+			for (const { name, file } of sounds) {
+				const inst = new Audio(`../assets/sounds/${file}`);
+				this.sounds.push({ name, inst });
+				await new Promise(onImageLoad =>
+					inst.addEventListener("loadeddata", onImageLoad)
+				);
+			}
+
+			onFinish(this);
+		});
 	};
 }

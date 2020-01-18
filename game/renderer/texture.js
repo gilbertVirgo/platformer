@@ -1,4 +1,4 @@
-import constants from "./constants.js";
+import constants from "./constants.js.js";
 
 export const Texture = function({
 	uid,
@@ -22,8 +22,6 @@ export const Texture = function({
 			typeof this.frames[this.index + 1] !== "undefined"
 				? this.index + 1
 				: 0;
-
-		console.log("(paint) Typeof next", typeof this.frames[this.index]);
 
 		// Get the source position and bounds of the given frame
 		const [sx, sy, sWidth, sHeight] = this.frames[this.index]; // || this.frames[0];

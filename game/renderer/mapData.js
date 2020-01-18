@@ -34,7 +34,7 @@ export default [
 	{
 		map: "assets/player/map-.png",
 		type: "player",
-		sprite: "walkingRightUnarmed",
+		sprite: "walkingLeftUnarmed",
 		tile: false,
 		fixed: false,
 		frames: [
@@ -54,7 +54,7 @@ export default [
 	{
 		map: "assets/player/map-.png",
 		type: "player",
-		sprite: "walkingLeftUnarmed",
+		sprite: "walkingRightUnarmed",
 		tile: false,
 		fixed: false,
 		frames: [

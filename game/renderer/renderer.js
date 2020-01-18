@@ -1,5 +1,5 @@
-import { Texture } from "./texture.js";
-import mapData from "./mapData.js";
+import { Texture } from "./texture.js.js";
+import mapData from "./mapData.js.js";
 
 // Z rules (layering order)
 const z = {
