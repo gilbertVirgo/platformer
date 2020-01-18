@@ -17,17 +17,16 @@ export const Texture = function({
 	// Does the texture tile?
 	this.tile = tile;
 
-	// Increment the `this.index` property (for animated textures)
-	this.next = function() {
-		this.index = this.index < this.frames.length - 1 ? this.index + 1 : 0;
-	};
-
 	this.paint = ({ context, dx, dy, dWidth, dHeight }) => {
-		// Increment textures with multiple frames
-		if (this.frames.length > 1) this.next();
+		this.index =
+			typeof this.frames[this.index + 1] !== "undefined"
+				? this.index + 1
+				: 0;
+
+		console.log("(paint) Typeof next", typeof this.frames[this.index]);
 
 		// Get the source position and bounds of the given frame
-		const [sx, sy, sWidth, sHeight] = this.frames[this.index];
+		const [sx, sy, sWidth, sHeight] = this.frames[this.index]; // || this.frames[0];
 
 		if (!this.tile) {
 			// For non-tiling textures...

@@ -6,7 +6,7 @@ export default [
 	},
 	{
 		name: "gun",
-		file: "gun.aif",
+		file: "gun.mp3",
 		type: "audio/mpeg"
 	}
 ];
