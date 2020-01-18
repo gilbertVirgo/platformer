@@ -6,46 +6,64 @@ export function Renderer({ width, height, fixedEntities }) {
 	this.height = height;
 	this.context = null;
 	this.fixedEntities = fixedEntities;
+	this.textures = [];
+
+	this.findTexture = uid => {
+		return this.textures.find(({ uid: desired }) => uid === desired);
+	};
 
 	this.paint = ({ entities }) => {
 		if (this.context) {
-			this.context.clearRect(0, 0, width, height);
+			//this.context.clearRect(0, 0, width, height);
+			this.context.drawImage(document.getElementById("background"), 0, 0);
 
 			const z = {
-				wall: 0,
 				platform: 1,
 				player: 2
 			};
 
-			const combinedEntities = [entities, ...this.fixedEntities].sort(
+			const combinedEntities = [...entities, ...this.fixedEntities].sort(
 				(a, b) => z[a.type] - z[b.type]
 			);
 
-			console.log({ mapData });
+			// Texture check
+			combinedEntities.forEach(
+				({
+					uid,
+					x: dx,
+					y: dy,
+					size: [dWidth, dHeight],
+					sprite,
+					type
+				}) => {
+					const { tile, fixed, frames } = mapData.find(
+						({ sprite: desired }) => sprite === desired
+					);
 
-			try {
-				combinedEntities.forEach(
-					({ x: dx, y: dy, size: [dWidth, dHeight], name }) => {
-						const map = document.getElementById(`tm-${name}`);
+					if (typeof this.findTexture(uid) === "undefined") {
+						const map = document.getElementById(`tm-${type}`);
 
-						const {
-							tile,
-							fixed,
-							frames,
-							width: sWidth,
-							height: sHeight
-						} = mapData.find(
-							({ name: textureName }) => textureName === name
-						)[0];
-
-						new Texture({
+						const texture = new Texture({
+							uid,
 							map,
 							frames,
 							tile,
-							fixed,
-							sWidth,
-							sHeight
-						}).paint({
+							fixed
+						});
+
+						texture.paint({
+							context: this.context,
+							dx,
+							dy,
+							dWidth,
+							dHeight
+						});
+
+						this.textures.push(texture);
+					} else {
+						const texture = this.findTexture(uid);
+						texture.frames = frames;
+						texture.paint({
 							context: this.context,
 							dx,
 							dy,
@@ -53,10 +71,8 @@ export function Renderer({ width, height, fixedEntities }) {
 							dHeight
 						});
 					}
-				);
-			} catch (ex) {
-				console.log(combinedEntities);
-			}
+				}
+			);
 		} else {
 			console.warn("No context provided!");
 		}
@@ -64,12 +80,15 @@ export function Renderer({ width, height, fixedEntities }) {
 
 	this.init = function() {
 		const canvas = document.createElement("canvas");
-		canvas.width = this.width;
-		canvas.height = this.height;
+
+		// Adjust for retina
+		canvas.width = this.width * 2;
+		canvas.height = this.height * 2;
+		canvas.style.width = `${this.width}px`;
+		canvas.style.height = `${this.height}px`;
 
 		this.context = canvas.getContext("2d");
-
-		console.log(canvas, this.context);
+		this.context.scale(2, 2);
 
 		document.body.appendChild(canvas);
 	};

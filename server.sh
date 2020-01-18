@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "Listening on port 3000."
-python3 -m http.server 3000
+echo "Listening on port 7000."
+python3 -m http.server 7000

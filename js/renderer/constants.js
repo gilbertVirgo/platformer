@@ -1,3 +1,3 @@
 export default {
-	"TILE_SIZE": 20
-}
+	TILE_SIZE: 25
+};

@@ -1,6 +1,7 @@
 import constants from "./constants.js";
 
 export const Texture = function({
+	uid,
 	map,
 	frames,
 	fixed = false,
@@ -9,6 +10,7 @@ export const Texture = function({
 	sHeight
 }) {
 	this.index = 0;
+	this.uid = uid;
 	this.map = map;
 	this.frames = frames;
 	this.fixed = fixed;
@@ -18,14 +20,13 @@ export const Texture = function({
 	this.sHeight = sHeight;
 
 	this.next = function() {
-		this.index = this.index < this.frames.length ? this.index + 1 : 0;
+		this.index = this.index < this.frames.length - 1 ? this.index + 1 : 0;
 	};
 
-	this.paint = function({ context, dx, dy, dWidth, dHeight }) {
+	this.paint = ({ context, dx, dy, dWidth, dHeight }) => {
 		if (!this.fixed) this.next();
 
-		const [sx, sy] = this.frames[this.index];
-		const { sWidth, sHeight } = this;
+		const [sx, sy, sWidth, sHeight] = this.frames[this.index];
 
 		if (!this.tile) {
 			context.drawImage(
@@ -42,30 +43,31 @@ export const Texture = function({
 		} else {
 			const { TILE_SIZE } = constants;
 
-			let lim =
-				Math.ceil((dWidth * height) / Math.pow(TILE_SIZE, 2)) +
-				height / TILE_SIZE;
+			let lim = Math.ceil((dWidth * dHeight) / Math.pow(TILE_SIZE, 1));
+
 			let x = 0,
 				y = 0;
 			for (let i = 0; i < lim; i += TILE_SIZE) {
-				if (x < dWidth) x += TILE_SIZE;
-				else {
-					x = 0;
-					y += TILE_SIZE;
-				}
-
 				context.drawImage(
 					this.map,
 					sx,
 					sy,
 					sWidth,
 					sHeight,
-					x,
-					y,
+					dx + x,
+					dy + y,
 					TILE_SIZE,
 					TILE_SIZE
 				);
+
+				if (x + TILE_SIZE < dWidth) x += TILE_SIZE;
+				else {
+					x = 0;
+					y += TILE_SIZE;
+				}
 			}
 		}
+
+		context.strokeRect(dx, dy, dWidth, dHeight);
 	};
 };
