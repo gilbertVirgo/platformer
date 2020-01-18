@@ -6,15 +6,20 @@ export function Client(id) {
 	this.controls;
 
 	this.init = function(socket) {
-		this.controls = new Controls({});
-
+		// Send socket server client ID
 		socket.send({
 			id: this.id
 		});
 
+		// Initiate default controls
+		this.controls = new Controls({});
+
+		// KeyPress handler
 		new KeyPress(window).init({
 			controls: this.controls,
 			onProfileChange: profile => {
+				// When the key profile changes, send the new profile with the client ID.
+
 				socket.send({
 					id: this.id,
 					profile

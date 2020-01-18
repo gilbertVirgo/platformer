@@ -5,46 +5,53 @@ export const Texture = function({
 	map,
 	frames,
 	fixed = false,
-	tile = false,
-	sWidth,
-	sHeight
+	tile = false
 }) {
+	// Frame index
 	this.index = 0;
+
 	this.uid = uid;
 	this.map = map;
 	this.frames = frames;
-	this.fixed = fixed;
-	this.tile = tile;
-	this.loaded = false;
-	this.sWidth = sWidth;
-	this.sHeight = sHeight;
 
+	// Does the texture tile?
+	this.tile = tile;
+
+	// Increment the `this.index` property (for animated textures)
 	this.next = function() {
 		this.index = this.index < this.frames.length - 1 ? this.index + 1 : 0;
 	};
 
 	this.paint = ({ context, dx, dy, dWidth, dHeight }) => {
-		if (!this.fixed) this.next();
+		// Increment textures with multiple frames
+		if (this.frames.length > 1) this.next();
 
+		// Get the source position and bounds of the given frame
 		const [sx, sy, sWidth, sHeight] = this.frames[this.index];
 
 		if (!this.tile) {
+			// For non-tiling textures...
+
 			context.drawImage(
-				this.map,
-				sx,
-				sy,
-				sWidth,
-				sHeight,
-				dx,
-				dy,
-				dWidth,
-				dHeight
+				this.map, // map source file
+				sx, // source x
+				sy, // source y
+				sWidth, // source width
+				sHeight, // source height
+				dx, // destination x
+				dy, // destination y
+				dWidth, // destination width
+				dHeight // destination height
 			);
 		} else {
+			// For tiling textures...
+
 			const { TILE_SIZE } = constants;
 
-			let lim = Math.ceil((dWidth * dHeight) / Math.pow(TILE_SIZE, 1));
+			// Tile count limit = destination area / tile size
+			let lim = Math.ceil((dWidth * dHeight) / TILE_SIZE);
 
+			// Place tiles
 			let x = 0,
 				y = 0;
 			for (let i = 0; i < lim; i += TILE_SIZE) {
@@ -68,6 +75,7 @@ export const Texture = function({
 			}
 		}
 
-		context.strokeRect(dx, dy, dWidth, dHeight);
+		// Debug: draw bounds of all textures
+		//context.strokeRect(dx, dy, dWidth, dHeight);
 	};
 };
