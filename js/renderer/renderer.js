@@ -36,41 +36,43 @@ export function Renderer({ width, height, fixedEntities }) {
 					sprite,
 					type
 				}) => {
-					const { tile, fixed, frames } = mapData.find(
-						({ sprite: desired }) => sprite === desired
-					);
+					if (["platform", "player"].includes(type)) {
+						const { tile, fixed, frames } = mapData.find(
+							({ sprite: desired }) => sprite === desired
+						);
 
-					if (typeof this.findTexture(uid) === "undefined") {
-						const map = document.getElementById(`tm-${type}`);
+						if (typeof this.findTexture(uid) === "undefined") {
+							const map = document.getElementById(`tm-${type}`);
 
-						const texture = new Texture({
-							uid,
-							map,
-							frames,
-							tile,
-							fixed
-						});
+							const texture = new Texture({
+								uid,
+								map,
+								frames,
+								tile,
+								fixed
+							});
 
-						texture.paint({
-							context: this.context,
-							dx,
-							dy,
-							dWidth,
-							dHeight
-						});
+							texture.paint({
+								context: this.context,
+								dx,
+								dy,
+								dWidth,
+								dHeight
+							});
 
-						this.textures.push(texture);
-					} else {
-						const texture = this.findTexture(uid);
-						texture.frames = frames;
-						texture.paint({
-							context: this.context,
-							dx,
-							dy,
-							dWidth,
-							dHeight
-						});
-					}
+							this.textures.push(texture);
+						} else {
+							const texture = this.findTexture(uid);
+							texture.frames = frames;
+							texture.paint({
+								context: this.context,
+								dx,
+								dy,
+								dWidth,
+								dHeight
+							});
+						}
+					} else this.context.strokeRect(dx, dy, dWidth, dHeight);
 				}
 			);
 		} else {
